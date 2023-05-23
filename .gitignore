@@ -1,0 +1,14 @@
+
+# Visual Studio
+/.vs
+*.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# JetBrains
+/.idea
+launchSettings.json
