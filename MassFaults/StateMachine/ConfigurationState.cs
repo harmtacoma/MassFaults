@@ -1,9 +1,10 @@
 ﻿using MassTransit;
 
-namespace MassFaults.Models
+namespace MassFaults.StateMachine
 {
     public class ConfigurationState : SagaStateMachineInstance
     {
         public Guid CorrelationId { get; set; }
+        public string CurrentState { get; set; }
     }
 }

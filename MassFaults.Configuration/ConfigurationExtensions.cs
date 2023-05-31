@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Configuration;
 
-namespace MassFaults
+namespace MassFaults.Configuration
 {
     public static class ConfigurationExtensions
     {

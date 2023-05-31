@@ -1,13 +1,8 @@
 ﻿using MassTransit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MassFaults
+namespace MassFaults.Configuration
 {
-    public class DiscardFaultedConsumerDefinition<T> : ConsumerDefinition<T> where T : class, MassTransit.IConsumer
+    public class DiscardFaultedConsumerDefinition<T> : ConsumerDefinition<T> where T : class, IConsumer
     {
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<T> consumerConfigurator)
         {
