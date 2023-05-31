@@ -1,13 +1,12 @@
 version: "3"
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.11-management
     hostname: rabbitmq
     restart: always
     ports:
       - 5672:5672
       - 15672:15672
-      - 1883:1883
     volumes:
       - ./rabbitmq:/etc/rabbitmq
     

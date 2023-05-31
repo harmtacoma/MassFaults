@@ -4,49 +4,71 @@ using MassTransit;
 
 namespace MassFaults.StateMachine
 {
-    public class ConfigurationStateMachine : MassTransitStateMachine<ConfigurationState>
+  public class ConfigurationStateMachine : MassTransitStateMachine<ConfigurationState>
+  {
+    public ConfigurationStateMachine()
     {
-        public ConfigurationStateMachine()
-        {
-            Event(() => ConfigurationSubmitted, x => x.CorrelateById(context => context.Message.ConfigurationId));
-            Event(() => ConfigurationImported, x => x.CorrelateById(context => context.Message.ConfigurationId));
-            Event(() => ActionsDone, x => x.CorrelateById(context => context.Message.ConfigurationId));
-            Event(() => Released, x => x.CorrelateById(context => context.Message.ConfigurationId));
+      InstanceState(x => x.CurrentState);
 
-            Initially(
-                When(ConfigurationSubmitted)
-                    .Publish(context => context.Init<ImportConfiguration>(new { OrderId = context.Saga.CorrelationId }))
-                    .TransitionTo(Importing));
+      Event(() => ConfigurationSubmitted, x => x.CorrelateById(context => context.Message.ConfigurationId));
+      Event(() => ConfigurationImported, x => x.CorrelateById(context => context.Message.ConfigurationId));
+      Event(() => ActionsDone, x => x.CorrelateById(context => context.Message.ConfigurationId));
+      Event(() => Released, x => x.CorrelateById(context => context.Message.ConfigurationId));
+      Event(() => ConfigurationFaulted, x => x.CorrelateById(context => context.Message.ConfigurationId));
 
-            During(Importing,
-                When(ConfigurationImported)
-                    .Publish(context => new StartActions()
-                    {
-                        ConfigurationId = context.Saga.CorrelationId
-                    })
-                    .TransitionTo(DoingActions));
+      Initially(
+          When(ConfigurationSubmitted)
+              .Then(context => // This bit makes sure that the demo case we have in the ConfigurationSubmitted event gets stored in our state instance
+              {
+                var instance = context.Saga;
+                var message = context.Message;
 
-            During(DoingActions,
-                When(ActionsDone)
-                    .Publish(context => new ReleaseConfiguration()
-                    {
-                        ConfigurationId = context.Saga.CorrelationId
-                    })
-                    .TransitionTo(Releasing));
+                instance.DemoCase = message.DemoCase;
+              })
+              .Publish(context => new ImportConfiguration() // Todo try async (right now we cant process multiple configurations at the same time
+              {
+                ConfigurationId = context.Saga.CorrelationId,
+                DemoCase = context.Saga.DemoCase
+              })
+              .TransitionTo(Importing));
 
-            During(Releasing,
-                When(Released)
-                    .TransitionTo(Completed));
-        }
+      During(Importing,
+          When(ConfigurationImported)
+              .Publish(context => new StartActions()
+              {
+                ConfigurationId = context.Saga.CorrelationId,
+                DemoCase = context.Saga.DemoCase
+              })
+              .TransitionTo(DoingActions));
 
-        public State Importing { get; private set; }
-        public State DoingActions { get; }
-        public State Releasing { get; }
-        public State Completed { get; }
+      During(DoingActions,
+          When(ActionsDone)
+              .Publish(context => new ReleaseConfiguration()
+              {
+                ConfigurationId = context.Saga.CorrelationId,
+                DemoCase = context.Saga.DemoCase
+              })
+              .TransitionTo(Releasing));
 
-        public Event<ConfigurationSubmitted> ConfigurationSubmitted { get; }
-        public Event<ConfigurationImported> ConfigurationImported { get; }
-        public Event<ActionsDone> ActionsDone { get; }
-        public Event<Released> Released { get; }
+      During(Releasing,
+          When(Released)
+              .TransitionTo(Completed));
+
+      DuringAny(
+        When(ConfigurationFaulted)
+          .TransitionTo(Error));
     }
+
+    public State Importing { get; }
+    public State DoingActions { get; }
+    public State Releasing { get; }
+    public State Completed { get; }
+    public State Error { get; }
+
+    public Event<ConfigurationSubmitted> ConfigurationSubmitted { get; }
+    public Event<ConfigurationImported> ConfigurationImported { get; }
+    public Event<ActionsDone> ActionsDone { get; }
+    public Event<Released> Released { get; }
+    public Event<ConfigurationFaulted> ConfigurationFaulted { get; }
+  }
 }

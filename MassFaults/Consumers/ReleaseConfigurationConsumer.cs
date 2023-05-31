@@ -4,16 +4,32 @@ using MassTransit;
 
 namespace MassFaults.Consumers
 {
-    public class ReleaseConfigurationConsumer : IConsumer<ReleaseConfiguration>
+  public class ReleaseConfigurationConsumer : IConsumer<ReleaseConfiguration>
+  {
+    public Task Consume(ConsumeContext<ReleaseConfiguration> context)
     {
-        public Task Consume(ConsumeContext<ReleaseConfiguration> context)
-        {
-            context.Publish(new Released()
-            {
-                ConfigurationId = context.Message.ConfigurationId
-            });
+      Console.WriteLine($"{nameof(ReleaseConfigurationConsumer)} received configuration '{context.Message.ConfigurationId}' (DemoCase: {context.Message.DemoCase})");
 
-            return Task.CompletedTask;
-        }
+      switch (context.Message.DemoCase)
+      {
+        case Models.DemoCase.InvalidRelease:
+          string invalidMessage = "Release is invalid";
+          Console.WriteLine(invalidMessage);
+          return Task.FromException(new ApplicationException(invalidMessage));
+        case Models.DemoCase.TimedOutRelease:
+          string timedOutMessage = "Release timed out";
+          Console.WriteLine(timedOutMessage);
+          return Task.FromException(new TimeoutException(timedOutMessage));
+        default:
+          Console.WriteLine($"Publishing {nameof(Released)}");
+          context.Publish(new Released()
+          {
+            ConfigurationId = context.Message.ConfigurationId
+          });
+          break;
+      }
+
+      return Task.CompletedTask;
     }
+  }
 }
