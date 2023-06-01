@@ -28,7 +28,7 @@ namespace MassFaults.Consumers
 
         public Task Consume(ConsumeContext<Fault<IActionCommand>> context)
         {
-            return FaultConfiguration(context, context.Message.Message.ConfigurationId, context.Message.FaultMessageTypes[0].Split(':').Last(), context.Message.Exceptions.FirstOrDefault());
+            return FaultConfiguration(context, context.Message.Message.ConfigurationId, context.Message.FaultMessageTypes[0].Split(':')[^1], context.Message.Exceptions.FirstOrDefault());
         }
 
         private static Task FaultConfiguration(IPublishEndpoint endpoint, Guid configurationId, string messageType, ExceptionInfo? exceptionInfo)
