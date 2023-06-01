@@ -16,7 +16,7 @@ namespace MassFaults.Console
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 System.Console.WriteLine("Press any number below to send an event for a specific demo case:");
                 System.Console.WriteLine("1 - Success");
@@ -37,33 +37,31 @@ namespace MassFaults.Console
                     switch (key)
                     {
                         case ConsoleKey.D1:
-                            SubmitNewConfiguration().GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync();
                             break;
                         case ConsoleKey.D2:
-                            SubmitNewConfiguration(DemoCase.InvalidImport).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.InvalidImport);
                             break;
                         case ConsoleKey.D3:
-                            SubmitNewConfiguration(DemoCase.TimedOutImport).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.TimedOutImport);
                             break;
                         case ConsoleKey.D4:
-                            SubmitNewConfiguration(DemoCase.InvalidAction).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.InvalidAction);
                             break;
                         case ConsoleKey.D5:
-                            SubmitNewConfiguration(DemoCase.TimedOutAction).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.TimedOutAction);
                             break;
                         case ConsoleKey.D6:
-                            SubmitNewConfiguration(DemoCase.InvalidRelease).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.InvalidRelease);
                             break;
                         case ConsoleKey.D7:
-                            SubmitNewConfiguration(DemoCase.TimedOutRelease).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.TimedOutRelease);
                             break;
                         case ConsoleKey.D8:
-                            SubmitNewConfiguration(DemoCase.InvalidActionTwo).GetAwaiter().GetResult();
+                            await SubmitNewConfigurationAsync(DemoCase.InvalidActionTwo);
                             break;
                         case ConsoleKey.D9:
-                            SubmitNewConfiguration(DemoCase.InvalidActionThree).GetAwaiter().GetResult();
-                            break;
-                        default:
+                            await SubmitNewConfigurationAsync(DemoCase.InvalidActionThree);
                             break;
                     }
 
@@ -80,9 +78,9 @@ namespace MassFaults.Console
             return Task.CompletedTask;
         }
 
-        private async Task SubmitNewConfiguration(DemoCase demoCase = DemoCase.Success)
+        private async Task SubmitNewConfigurationAsync(DemoCase demoCase = DemoCase.Success)
         {
-            var newConfiguration = new ConfigurationSubmitted()
+            var newConfiguration = new ConfigurationSubmitted
             {
                 ConfigurationId = Guid.NewGuid(),
                 DemoCase = demoCase
