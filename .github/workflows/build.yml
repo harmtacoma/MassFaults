@@ -44,5 +44,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"harmtacoma_MassFaults" /o:"harmtacoma" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          'dotnet publish --no-restore -c Release --runtime win-x64 --no-self-contained --version-suffix "$CI_PIPELINE_ID" -o "publish/$CI_PROJECT_TITLE"'
+          msbuild /t:Build /p:Configuration=Release /p:Platform="Any CPU"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
