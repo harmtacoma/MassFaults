@@ -1,6 +1,6 @@
-﻿namespace MassFaults.Models.Events
+﻿namespace MassFaults.Models.Commands
 {
-    public class ConfigurationSubmitted
+    public interface IActionCommand
     {
         public Guid ConfigurationId { get; set; }
         public DemoCase DemoCase { get; set; }

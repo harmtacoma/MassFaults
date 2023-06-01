@@ -1,5 +1,5 @@
-﻿using MassFaults.Models.Events;
-using MassFaults.Models.Messages;
+﻿using MassFaults.Models.Commands;
+using MassFaults.Models.Events;
 using MassTransit;
 using System;
 using System.Collections.Generic;
@@ -9,41 +9,38 @@ using System.Threading.Tasks;
 
 namespace MassFaults.Consumers
 {
-  public class FaultsConsumer : IConsumer<Fault<ImportConfiguration>>, IConsumer<Fault<StartActions>>, IConsumer<Fault<ReleaseConfiguration>>
-  {
-    public Task Consume(ConsumeContext<Fault<ImportConfiguration>> context)
+    public class FaultsConsumer : IConsumer<Fault<ImportConfiguration>>, IConsumer<Fault<StartActions>>, IConsumer<Fault<ReleaseConfiguration>>, IConsumer<Fault<IActionCommand>>
     {
-      Console.WriteLine($"{nameof(ImportConfiguration)} with id '{context.Message.Message.ConfigurationId}' faulted.");// todo log exception
+        public Task Consume(ConsumeContext<Fault<ImportConfiguration>> context)
+        {
+            return FaultConfiguration(context, context.Message.Message.ConfigurationId, nameof(ImportConfiguration), context.Message.Exceptions.FirstOrDefault());
+        }
 
-      FaultConfiguration(context, context.Message.Message.ConfigurationId);
+        public Task Consume(ConsumeContext<Fault<StartActions>> context)
+        {
+            return FaultConfiguration(context, context.Message.Message.ConfigurationId, nameof(StartActions), context.Message.Exceptions.FirstOrDefault());
+        }
 
-      return Task.CompletedTask;
+        public Task Consume(ConsumeContext<Fault<ReleaseConfiguration>> context)
+        {
+            return FaultConfiguration(context, context.Message.Message.ConfigurationId, nameof(ReleaseConfiguration), context.Message.Exceptions.FirstOrDefault());
+        }
+
+        public Task Consume(ConsumeContext<Fault<IActionCommand>> context)
+        {
+            return FaultConfiguration(context, context.Message.Message.ConfigurationId, context.Message.FaultMessageTypes[0].Split(':').Last(), context.Message.Exceptions.FirstOrDefault());
+        }
+
+        private static Task FaultConfiguration(IPublishEndpoint endpoint, Guid configurationId, string messageType, ExceptionInfo? exceptionInfo)
+        {
+            Console.WriteLine($"Configuration '{configurationId}' faulted during {messageType}. Error: '{exceptionInfo?.Message}'");
+
+            endpoint.Publish(new ConfigurationFaulted()
+            {
+                ConfigurationId = configurationId
+            });
+
+            return Task.CompletedTask;
+        }
     }
-
-    public Task Consume(ConsumeContext<Fault<StartActions>> context)
-    {
-      Console.WriteLine($"{nameof(StartActions)} with id '{context.Message.Message.ConfigurationId}' faulted.");
-
-      FaultConfiguration(context, context.Message.Message.ConfigurationId);
-
-      return Task.CompletedTask;
-    }
-
-    public Task Consume(ConsumeContext<Fault<ReleaseConfiguration>> context)
-    {
-      Console.WriteLine($"{nameof(ReleaseConfiguration)} with id '{context.Message.Message.ConfigurationId}' faulted.");
-
-      FaultConfiguration(context, context.Message.Message.ConfigurationId);
-
-      return Task.CompletedTask;
-    }
-
-    private void FaultConfiguration(IPublishEndpoint endpoint, Guid configurationId)
-    {
-      endpoint.Publish(new ConfigurationFaulted()
-      {
-        ConfigurationId = configurationId
-      });
-    }
-  }
 }

@@ -21,7 +21,7 @@ namespace MassFaults.Configuration
                     hostConfig.Username(rabbitMqOptions.Username);
                     hostConfig.Password(rabbitMqOptions.Password);
                 });
-                rabbitMqConfig.ConcurrentMessageLimit = 1;
+                rabbitMqConfig.ConcurrentMessageLimit = 3;
                 rabbitMqConfig.UseDefaultIncrementalRetryPolicy();
                 rabbitMqConfig.ConfigureEndpoints(context);
             });
