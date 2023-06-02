@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassFaults.Console", "MassF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassFaults.Configuration", "MassFaults.Configuration\MassFaults.Configuration.csproj", "{034E435E-2A4A-4C8A-8B10-D79F45B49760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassFaults.Test", "MassFaults.Test\MassFaults.Test.csproj", "{FB253904-3BD1-4B67-89BA-035DE5D12BCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassFaults.Tests", "MassFaults.Tests\MassFaults.Tests.csproj", "{FB253904-3BD1-4B67-89BA-035DE5D12BCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
