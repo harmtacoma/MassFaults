@@ -1,10 +1,6 @@
 name: SonarCloud
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+  [push]
 jobs:
   build:
     name: Build and analyze
@@ -43,6 +39,12 @@ jobs:
         uses: Nuget/setup-nuget@v1.0.5
       - name: Restore nuget packages
         run: nuget restore
+      - name: Unit tests
+        shell: powershell
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          dotnet test --no-restore --verbosity normal
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
