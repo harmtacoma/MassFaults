@@ -39,6 +39,7 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          dotnet tool install --global dotnet-coverage
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1.0.5
       - name: Restore nuget packages
@@ -49,9 +50,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"harmtacoma_MassFaults" /o:"harmtacoma" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          msbuild /t:Build /p:Configuration=Release /p:Platform="Any CPU"
-          dotnet restore
-          dotnet build --configuration Release --no-restore
-          dotnet test --no-restore --verbosity normal --collect "Code Coverage"
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner begin /k:"<sonar-project-key>"    
+            /d:sonar.login="<sonar-token>"
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet build --no-incremental
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet sonarscanner end /d:sonar.login="<sonar-token>"
