@@ -10,7 +10,7 @@
       int[] numbers = { 1, 2, 3, 4, 5 };
 
       // Issue: Unused variable
-      string unusedVariable = "I'm unused";
+      string unusedVariable = "I'm still unused";
 
       // Issue: Unused parameter
       int result = Sum(10, 20);
