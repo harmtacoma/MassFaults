@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassFaults.Configuration", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassFaults.ExcludeProject", "MassFaults.ExcludeProject\MassFaults.ExcludeProject.csproj", "{B48CD8CD-B7AE-4A1D-B54F-AB0C4762E09B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassFaults.Tests", "MassFaults.Tests\MassFaults.Tests.csproj", "{FB253904-3BD1-4B67-89BA-035DE5D12BCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B48CD8CD-B7AE-4A1D-B54F-AB0C4762E09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B48CD8CD-B7AE-4A1D-B54F-AB0C4762E09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B48CD8CD-B7AE-4A1D-B54F-AB0C4762E09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB253904-3BD1-4B67-89BA-035DE5D12BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB253904-3BD1-4B67-89BA-035DE5D12BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB253904-3BD1-4B67-89BA-035DE5D12BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB253904-3BD1-4B67-89BA-035DE5D12BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
